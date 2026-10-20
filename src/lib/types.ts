@@ -50,7 +50,7 @@ export type Note = {
   opinion: string;
   unknownTerms: string[];
   createdAt: string;
-  feedback: Feedback;
+  feedback: Feedback | null; // 채점 전에는 null
 };
 
 /** 채점 기준 (기획서 5.2 루브릭) */
