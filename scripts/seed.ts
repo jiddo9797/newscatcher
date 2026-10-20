@@ -183,6 +183,7 @@ async function main() {
         unknownTerms: day.note.unknownTerms,
         totalScore: day.note.feedback.totalScore,
         feedback: day.note.feedback,
+        gradeStatus: "done",
         createdAt: `${date}T21:00:00+09:00`,
       });
     }

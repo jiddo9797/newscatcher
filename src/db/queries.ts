@@ -40,6 +40,8 @@ function toNote(row: NoteRow, article: ArticleRow): Note {
     unknownTerms: row.unknownTerms,
     createdAt: row.createdAt,
     feedback: row.feedback,
+    gradeStatus: row.gradeStatus,
+    gradeError: row.gradeError,
   };
 }
 

@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import CategoryBadge from "@/components/CategoryBadge";
-import ScoreBadge from "@/components/ScoreBadge";
+import ScoreBadge, { GradeLabel } from "@/components/ScoreBadge";
 import { NoPickToday, PageLoading } from "@/components/States";
 import { getNoteByDate, getStats, getTodayPick, listNotes } from "@/db/queries";
 import { formatDate } from "@/lib/format";
@@ -103,7 +103,7 @@ async function HomeContent() {
                     {note.feedback ? (
                       <ScoreBadge score={note.feedback.totalScore} />
                     ) : (
-                      <span className="shrink-0 text-xs text-zinc-400">채점 전</span>
+                      <GradeLabel status={note.gradeStatus} />
                     )}
                   </Link>
                 </li>

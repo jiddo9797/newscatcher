@@ -3,7 +3,7 @@
 // 앱이 켜질 때 그 SQL이 자동으로 적용된다.
 
 import { date, integer, jsonb, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
-import type { Category, Feedback } from "@/lib/types";
+import type { Category, Feedback, GradeStatus } from "@/lib/types";
 
 /** 수집한 기사 후보 */
 export const articles = pgTable("articles", {
@@ -33,7 +33,7 @@ export const dailyPicks = pgTable("daily_picks", {
  */
 export const jobRuns = pgTable("job_runs", {
   id: serial("id").primaryKey(),
-  job: text("job").$type<"collect" | "select">().notNull(),
+  job: text("job").$type<"collect" | "select" | "grade">().notNull(),
   status: text("status").$type<"success" | "partial" | "failed">().notNull(),
   summary: text("summary").notNull(), // 한 줄 요약 (예: "12곳 중 12곳 성공, 새 기사 85개")
   detail: jsonb("detail"), // 출처별 결과 등 자세한 내용
@@ -53,5 +53,8 @@ export const notes = pgTable("notes", {
   unknownTerms: text("unknown_terms").array().notNull().default([]),
   totalScore: integer("total_score"), // 채점 전에는 비어 있음
   feedback: jsonb("feedback").$type<Feedback>(), // 채점 전에는 비어 있음
+  // 채점 상태: pending(대기) → grading(채점 중) → done(완료) / failed(실패)
+  gradeStatus: text("grade_status").$type<GradeStatus>().notNull().default("pending"),
+  gradeError: text("grade_error"), // 실패했을 때 이유
   createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull().defaultNow(),
 });

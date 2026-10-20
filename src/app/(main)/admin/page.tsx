@@ -15,7 +15,7 @@ const STATUS_LABEL = {
   partial: { text: "일부 실패", className: "bg-amber-50 text-amber-700" },
   failed: { text: "실패", className: "bg-rose-50 text-rose-700" },
 } as const;
-const JOB_LABEL = { collect: "뉴스 수집", select: "뉴스 선정" } as const;
+const JOB_LABEL = { collect: "뉴스 수집", select: "뉴스 선정", grade: "AI 채점" } as const;
 
 export default function AdminPage() {
   return (

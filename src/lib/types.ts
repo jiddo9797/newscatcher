@@ -39,7 +39,10 @@ export type Feedback = {
   modelSummary: string;
   interviewTip?: { question: string; tip: string };
   termExplanations?: { term: string; explanation: string }[];
+  basis?: "article" | "description"; // 원문 본문으로 채점했는지, RSS 소개문만으로 채점했는지
 };
+
+export type GradeStatus = "pending" | "grading" | "done" | "failed";
 
 /** 내가 쓴 글 + 피드백 (notes 테이블) */
 export type Note = {
@@ -51,6 +54,8 @@ export type Note = {
   unknownTerms: string[];
   createdAt: string;
   feedback: Feedback | null; // 채점 전에는 null
+  gradeStatus: GradeStatus;
+  gradeError: string | null;
 };
 
 /** 채점 기준 (기획서 5.2 루브릭) */

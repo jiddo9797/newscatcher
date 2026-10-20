@@ -7,6 +7,9 @@ import { formatDate } from "@/lib/format";
 import { RUBRIC } from "@/lib/types";
 import WriteForm from "./WriteForm";
 
+// 제출 후 뒤에서 도는 AI 채점(after)이 끝날 때까지 기다릴 수 있는 최대 시간(초)
+export const maxDuration = 300;
+
 export default function WritePage() {
   return (
     <Suspense fallback={<PageLoading />}>

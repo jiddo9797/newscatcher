@@ -7,6 +7,10 @@ import { PageLoading } from "@/components/States";
 import { getNote } from "@/db/queries";
 import { formatDate } from "@/lib/format";
 import { RUBRIC, type Feedback, type Note } from "@/lib/types";
+import GradingStatus from "./GradingStatus";
+
+// 다시 채점 버튼의 AI 채점(after)이 끝날 때까지 기다릴 수 있는 최대 시간(초)
+export const maxDuration = 300;
 
 // 주소의 [id] 값(params)은 요청이 들어와야 알 수 있으므로
 // 그 값을 읽는 부분을 <Suspense>로 감싼다. (Next.js 16 Cache Components 규칙)
@@ -48,7 +52,11 @@ async function NoteDetail({ params }: { params: Promise<{ id: string }> }) {
             원문 보기 ↗
           </a>
         </div>
-        {feedback ? <ScorePanel feedback={feedback} /> : <PendingPanel />}
+        {feedback ? (
+          <ScorePanel feedback={feedback} />
+        ) : (
+          <GradingStatus noteId={note.id} status={note.gradeStatus} error={note.gradeError} />
+        )}
       </aside>
 
       {/* 오른쪽: 피드백 내용 */}
@@ -90,19 +98,16 @@ function ScorePanel({ feedback }: { feedback: Feedback }) {
   );
 }
 
-function PendingPanel() {
-  return (
-    <section className="rounded-2xl border border-dashed border-zinc-300 bg-white p-6 text-center">
-      <p className="text-3xl">⏳</p>
-      <p className="mt-3 font-semibold">아직 채점 전이에요</p>
-      <p className="mt-1 text-sm text-zinc-500">AI 채점은 5단계에서 연결돼요.</p>
-    </section>
-  );
-}
-
 function FeedbackDetail({ note, feedback }: { note: Note; feedback: Feedback }) {
   return (
     <>
+      {feedback.basis && (
+        <p className="text-sm text-zinc-500">
+          {feedback.basis === "article"
+            ? "📰 원문 기사 본문을 바탕으로 채점했어요."
+            : "⚠️ 원문 본문을 가져오지 못해 기사 소개문을 바탕으로 채점했어요. 정확성 점수는 참고만 해 주세요."}
+        </p>
+      )}
       <div className="grid gap-6 xl:grid-cols-2">
         <FeedbackList title="👍 잘한 점" items={feedback.goodPoints} />
         <FeedbackList title="🔧 개선할 점" items={feedback.improvements} />
