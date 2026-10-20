@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-pretendard), system-ui, sans-serif;
+}
+
+body {
+  background: #f6f7f9;
+  color: #18181b;
+  /* 한국어 문장이 단어 중간에서 끊기지 않도록 */
+  word-break: keep-all;
+}
