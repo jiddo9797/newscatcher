@@ -1,6 +1,8 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import { logout } from "@/app/login/actions";
 import { getStats } from "@/db/queries";
+import { authConfigured } from "@/lib/session";
 
 export default function Header() {
   return (
@@ -23,6 +25,13 @@ export default function Header() {
           <Suspense fallback={<span className="w-24" />}>
             <StreakBadge />
           </Suspense>
+          {authConfigured() && (
+            <form action={logout}>
+              <button type="submit" className="text-sm text-zinc-400 hover:text-zinc-700">
+                로그아웃
+              </button>
+            </form>
+          )}
         </nav>
       </div>
     </header>

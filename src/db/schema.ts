@@ -2,7 +2,7 @@
 // 이 파일을 고친 뒤 `npm run db:generate`를 실행하면 drizzle/ 폴더에 SQL 파일이 생기고,
 // 앱이 켜질 때 그 SQL이 자동으로 적용된다.
 
-import { date, integer, jsonb, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, date, integer, jsonb, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import type { Category, Feedback, GradeStatus } from "@/lib/types";
 
 /** 수집한 기사 후보 */
@@ -57,4 +57,11 @@ export const notes = pgTable("notes", {
   gradeStatus: text("grade_status").$type<GradeStatus>().notNull().default("pending"),
   gradeError: text("grade_error"), // 실패했을 때 이유
   createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull().defaultNow(),
+});
+
+/** 로그인 시도 기록 (기획서 S-1): 짧은 시간에 여러 번 틀리면 잠시 막는 데 쓴다 */
+export const loginAttempts = pgTable("login_attempts", {
+  id: serial("id").primaryKey(),
+  success: boolean("success").notNull(),
+  attemptedAt: timestamp("attempted_at", { withTimezone: true, mode: "string" }).notNull().defaultNow(),
 });

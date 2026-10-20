@@ -9,7 +9,7 @@
 
 import Parser from "rss-parser";
 import { sql } from "drizzle-orm";
-import { getDb } from "@/db";
+import { affectedRows, getDb } from "@/db";
 import { articles, jobRuns } from "@/db/schema";
 import { FEED_SOURCES, type FeedSource } from "./sources";
 
@@ -55,7 +55,7 @@ export async function runCollect(): Promise<CollectResult> {
     WHERE created_at < now() - make_interval(days => ${KEEP_DAYS})
       AND id NOT IN (SELECT article_id FROM daily_picks)
   `);
-  const deletedCount = deleted.affectedRows ?? 0;
+  const deletedCount = affectedRows(deleted);
 
   const okCount = sources.filter((s) => s.ok).length;
   const inserted = sources.reduce((sum, s) => sum + s.inserted, 0);

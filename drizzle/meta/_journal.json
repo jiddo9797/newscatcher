@@ -22,6 +22,13 @@
       "when": 1792512189408,
       "tag": "0002_grade_status",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792513311438,
+      "tag": "0003_login_attempts",
+      "breakpoints": true
     }
   ]
 }
