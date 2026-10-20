@@ -6,7 +6,7 @@ AI가 매일 골라준 뉴스 1개를 읽고, 직접 요약하고 의견을 쓰�
 - 포트폴리오 정리: [포트폴리오_정리.md](포트폴리오_정리.md)
 
 ## 기술 스택
-Next.js 16 · TypeScript · Tailwind CSS · PostgreSQL (PGlite / Neon) · Drizzle ORM · Claude API · Vercel
+Next.js 16 · TypeScript · Tailwind CSS · PostgreSQL (PGlite / Neon) · Drizzle ORM · OpenAI API · Vercel
 
 ## 진행 상황
 - [x] 1단계: 프로젝트 뼈대, 가짜 데이터로 화면 5개 구성
