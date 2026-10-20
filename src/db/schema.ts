@@ -27,6 +27,20 @@ export const dailyPicks = pgTable("daily_picks", {
   createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }).notNull().defaultNow(),
 });
 
+/**
+ * 자동 작업 실행 기록 (기획서 S-2)
+ * 뉴스 수집·선정이 언제 돌았고, 성공했는지, 실패했다면 왜인지 남긴다.
+ */
+export const jobRuns = pgTable("job_runs", {
+  id: serial("id").primaryKey(),
+  job: text("job").$type<"collect" | "select">().notNull(),
+  status: text("status").$type<"success" | "partial" | "failed">().notNull(),
+  summary: text("summary").notNull(), // 한 줄 요약 (예: "12곳 중 12곳 성공, 새 기사 85개")
+  detail: jsonb("detail"), // 출처별 결과 등 자세한 내용
+  startedAt: timestamp("started_at", { withTimezone: true, mode: "string" }).notNull(),
+  durationMs: integer("duration_ms").notNull(),
+});
+
 /** 내가 쓴 글과 AI 피드백: 오늘의 뉴스 하나당 글 하나 */
 export const notes = pgTable("notes", {
   id: serial("id").primaryKey(),

@@ -11,7 +11,7 @@ Next.js 16 · TypeScript · Tailwind CSS · PostgreSQL (PGlite / Neon) · Drizzl
 ## 진행 상황
 - [x] 1단계: 프로젝트 뼈대, 가짜 데이터로 화면 5개 구성
 - [x] 2단계: DB 연결 (PGlite), 글 저장과 불러오기
-- [ ] 3단계: RSS 뉴스 수집
+- [x] 3단계: RSS 뉴스 수집 (12개 언론사 피드, 재시도, 실행 기록), 관리 화면
 - [ ] 4단계: AI 뉴스 선정
 - [ ] 5단계: AI 채점
 - [ ] 6단계: 비밀번호 보호, 배포, 매일 자동 실행
@@ -28,7 +28,7 @@ npm run dev
 | 명령어 | 하는 일 |
 |---|---|
 | `npm run db:seed` | 데이터를 모두 지우고 예시 데이터를 다시 넣음 (실행한 날이 "오늘") |
-| `npm run db:generate` | `src/db/schema.ts`를 고친 뒤 실행 → `drizzle/`에 SQL 파일 생성 (앱이 켜질 때 자동 적용) |
+| `npm run db:generate` | `src/db/schema.ts`를 고친 뒤 실행 → `drizzle/`에 SQL 파일 생성 (개발 서버를 **다시 켜면** 자동 적용) |
 | `npm run db:studio` | 브라우저에서 DB 내용을 표로 보기 |
 
 ⚠️ DB 파일은 `.data/` 폴더에 저장돼요. PGlite는 한 번에 한 프로그램만 DB를 열 수 있어서, `db:seed`와 `db:studio`는 **개발 서버를 끈 상태에서** 실행해야 해요.
@@ -41,14 +41,18 @@ src/
 │  │  ├─ page.tsx        홈: 오늘의 뉴스            → /
 │  │  ├─ write/          요약·의견 작성             → /write
 │  │  ├─ notes/[id]/     AI 피드백 보기             → /notes/4
-│  │  └─ history/        내 기록 목록               → /history
+│  │  ├─ history/        내 기록 목록               → /history
+│  │  └─ admin/          뉴스 수집 실행, 작업 기록  → /admin
 │  ├─ login/             로그인                     → /login
 │  ├─ not-found.tsx      없는 주소로 들어왔을 때 화면
 │  ├─ layout.tsx         모든 화면의 공통 틀 (폰트 등)
 │  └─ globals.css        공통 스타일
 ├─ components/           여러 화면에서 같이 쓰는 UI 조각
+├─ jobs/
+│  ├─ sources.ts         뉴스를 가져올 언론사 RSS 목록
+│  └─ collect.ts         뉴스 수집 작업 (재시도, 중복 제거, 실행 기록)
 ├─ db/
-│  ├─ schema.ts          테이블 정의 (기사, 오늘의 뉴스, 내 글)
+│  ├─ schema.ts          테이블 정의 (기사, 오늘의 뉴스, 내 글, 작업 기록)
 │  ├─ index.ts           DB 연결
 │  └─ queries.ts         화면에서 쓰는 조회 함수
 └─ lib/

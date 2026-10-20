@@ -4,11 +4,11 @@
 // DB를 한 번 읽어서 결과를 고정된 화면으로 굳혀 버려, 새 글을 써도 화면이 안 바뀐다.
 
 import { connection } from "next/server";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, gte, sql } from "drizzle-orm";
 import { addDays, todayKST } from "@/lib/date";
 import type { Article, DailyPick, Note } from "@/lib/types";
 import { getDb } from "./index";
-import { articles, dailyPicks, notes } from "./schema";
+import { articles, dailyPicks, jobRuns, notes } from "./schema";
 
 async function db() {
   await connection();
@@ -124,4 +124,23 @@ function countStreak(dates: string[]): number {
     day = addDays(day, -1);
   }
   return streak;
+}
+
+export type JobRun = typeof jobRuns.$inferSelect;
+
+/** 자동 작업 실행 기록, 최신순 */
+export async function listJobRuns(limit = 10): Promise<JobRun[]> {
+  const database = await db();
+  return database.select().from(jobRuns).orderBy(desc(jobRuns.startedAt)).limit(limit);
+}
+
+/** 최근 N시간 안에 나온 후보 기사, 최신순 */
+export async function listRecentArticles(hours = 24): Promise<Article[]> {
+  const database = await db();
+  const rows = await database
+    .select()
+    .from(articles)
+    .where(gte(articles.publishedAt, sql`now() - make_interval(hours => ${hours})`))
+    .orderBy(desc(articles.publishedAt));
+  return rows.map(toArticle);
 }

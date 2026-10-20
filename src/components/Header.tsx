@@ -16,6 +16,9 @@ export default function Header() {
           <Link href="/history" className="text-zinc-600 hover:text-zinc-900">
             내 기록
           </Link>
+          <Link href="/admin" className="text-zinc-600 hover:text-zinc-900">
+            관리
+          </Link>
           {/* 연속 학습일은 DB를 읽어야 해서 따로 불러온다. 나머지 헤더는 바로 보인다. */}
           <Suspense fallback={<span className="w-24" />}>
             <StreakBadge />

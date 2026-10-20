@@ -175,7 +175,7 @@ async function main() {
   const db = await getDb();
   const today = todayKST();
 
-  await db.execute(sql`TRUNCATE notes, daily_picks, articles RESTART IDENTITY CASCADE`);
+  await db.execute(sql`TRUNCATE notes, daily_picks, articles, job_runs RESTART IDENTITY CASCADE`);
 
   // 오래된 날짜부터 넣어야 글 번호(id)가 날짜 순서대로 붙는다.
   for (const [i, day] of [...SEED].sort((a, b) => b.daysAgo - a.daysAgo).entries()) {
