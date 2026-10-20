@@ -3,8 +3,9 @@
 // ⚠️ 개발 서버(npm run dev)를 끈 상태에서 실행할 것.
 //    PGlite는 한 번에 한 프로그램만 DB 폴더를 열 수 있다.
 //
-// 기존 데이터를 모두 지우고, 실행한 날을 "오늘"로 해서 예시 데이터를 다시 넣는다.
-// 기사 내용은 실제 뉴스가 아닌 예시 문장이다. (4단계부터는 실제 뉴스가 자동으로 들어온다)
+// 기존 데이터를 모두 지우고, 실행한 날 기준으로 "지난 4일치" 예시 기록을 넣는다.
+// 오늘의 뉴스는 넣지 않는다. 관리 화면에서 수집 → 자동 선정으로 진짜 뉴스를 고르면 된다.
+// 기사 내용은 실제 뉴스가 아닌 예시 문장이다.
 
 import { sql } from "drizzle-orm";
 import { closeDb, getDb } from "../src/db";
@@ -20,17 +21,6 @@ type SeedDay = {
 };
 
 const SEED: SeedDay[] = [
-  {
-    daysAgo: 0,
-    article: {
-      title: "금융당국, 은행권 생성형 AI 활용 가이드라인 발표 (예시 기사)",
-      description:
-        "금융당국이 은행의 생성형 AI 도입 시 지켜야 할 보안·책임 기준을 담은 가이드라인을 내놓았다. 고객 정보 보호와 AI 판단에 대한 설명 책임이 핵심이다.",
-      source: "예시경제",
-      category: "경제",
-    },
-    reason: "금융권 AI 도입은 은행 IT 면접 단골 주제예요. 보안과 책임이라는 두 키워드를 정리해 두기 좋아요.",
-  },
   {
     daysAgo: 1,
     article: {
@@ -198,7 +188,7 @@ async function main() {
     }
   }
 
-  console.log(`✅ 예시 데이터를 넣었어요. 오늘(${today})의 뉴스 1개 + 지난 기록 ${SEED.length - 1}개`);
+  console.log(`✅ 예시 데이터를 넣었어요. 지난 기록 ${SEED.length}개 (오늘 ${today}의 뉴스는 관리 화면에서 선정)`);
   await closeDb();
 }
 

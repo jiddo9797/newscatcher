@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 // 여러 화면에서 같이 쓰는 "불러오는 중" / "오늘의 뉴스 없음" 화면
 
 export function PageLoading() {
@@ -10,11 +12,16 @@ export function NoPickToday() {
       <p className="text-4xl">📭</p>
       <p className="mt-4 text-lg font-semibold">오늘의 뉴스가 아직 없어요</p>
       <p className="mt-2 text-zinc-500">
-        4단계(AI 뉴스 선정)가 연결되면 매일 아침 자동으로 채워져요.
+        관리 화면에서 <b>뉴스 수집</b> → <b>자동 선정</b>을 눌러 주세요.
         <br />
-        지금은 개발 서버를 끄고 <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-sm">npm run db:seed</code>를
-        실행하면 예시 뉴스가 들어가요.
+        6단계(배포)부터는 매일 아침 자동으로 준비돼요.
       </p>
+      <Link
+        href="/admin"
+        className="mt-6 inline-block rounded-xl bg-indigo-600 px-6 py-3 font-semibold text-white hover:bg-indigo-700"
+      >
+        관리 화면으로 →
+      </Link>
     </div>
   );
 }

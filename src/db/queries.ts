@@ -4,7 +4,7 @@
 // DB를 한 번 읽어서 결과를 고정된 화면으로 굳혀 버려, 새 글을 써도 화면이 안 바뀐다.
 
 import { connection } from "next/server";
-import { desc, eq, gte, sql } from "drizzle-orm";
+import { and, desc, eq, gte, sql } from "drizzle-orm";
 import { addDays, todayKST } from "@/lib/date";
 import type { Article, DailyPick, Note } from "@/lib/types";
 import { getDb } from "./index";
@@ -143,4 +143,16 @@ export async function listRecentArticles(hours = 24): Promise<Article[]> {
     .where(gte(articles.publishedAt, sql`now() - make_interval(hours => ${hours})`))
     .orderBy(desc(articles.publishedAt));
   return rows.map(toArticle);
+}
+
+/** 가장 최근의 자동 선정 기록 (점수 순위가 담겨 있음) */
+export async function getLatestRanking(): Promise<JobRun | null> {
+  const database = await db();
+  const [row] = await database
+    .select()
+    .from(jobRuns)
+    .where(and(eq(jobRuns.job, "select"), sql`${jobRuns.detail} ? 'top'`))
+    .orderBy(desc(jobRuns.startedAt))
+    .limit(1);
+  return row ?? null;
 }

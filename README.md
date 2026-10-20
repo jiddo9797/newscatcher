@@ -6,13 +6,13 @@ AI가 매일 골라준 뉴스 1개를 읽고, 직접 요약하고 의견을 쓰�
 - 포트폴리오 정리: [포트폴리오_정리.md](포트폴리오_정리.md)
 
 ## 기술 스택
-Next.js 16 · TypeScript · Tailwind CSS · PostgreSQL (PGlite / Neon) · Drizzle ORM · OpenAI API · Vercel
+Next.js 16 · TypeScript · Tailwind CSS · PostgreSQL (PGlite / Neon) · Drizzle ORM · Gemini API · Vercel
 
 ## 진행 상황
 - [x] 1단계: 프로젝트 뼈대, 가짜 데이터로 화면 5개 구성
 - [x] 2단계: DB 연결 (PGlite), 글 저장과 불러오기
 - [x] 3단계: RSS 뉴스 수집 (12개 언론사 피드, 재시도, 실행 기록), 관리 화면
-- [ ] 4단계: AI 뉴스 선정
+- [x] 4단계: 규칙 기반 뉴스 선정 (이슈 묶기 + 점수), 직접 선택
 - [ ] 5단계: AI 채점
 - [ ] 6단계: 비밀번호 보호, 배포, 매일 자동 실행
 
@@ -31,7 +31,7 @@ npm run dev
 | `npm run db:generate` | `src/db/schema.ts`를 고친 뒤 실행 → `drizzle/`에 SQL 파일 생성 (개발 서버를 **다시 켜면** 자동 적용) |
 | `npm run db:studio` | 브라우저에서 DB 내용을 표로 보기 |
 
-⚠️ DB 파일은 `.data/` 폴더에 저장돼요. PGlite는 한 번에 한 프로그램만 DB를 열 수 있어서, `db:seed`와 `db:studio`는 **개발 서버를 끈 상태에서** 실행해야 해요.
+⚠️ DB 파일은 OneDrive 밖인 `사용자 폴더/.newscatcher/pglite`에 저장돼요. OneDrive 안에 두면 동기화 때문에 DB가 열리지 않아요. (위치를 바꾸려면 환경 변수 `PGLITE_DIR`) PGlite는 한 번에 한 프로그램만 DB를 열 수 있어서, `db:seed`와 `db:studio`는 **개발 서버를 끈 상태에서** 실행해야 해요.
 
 ## 폴더 구조
 ```
@@ -42,7 +42,7 @@ src/
 │  │  ├─ write/          요약·의견 작성             → /write
 │  │  ├─ notes/[id]/     AI 피드백 보기             → /notes/4
 │  │  ├─ history/        내 기록 목록               → /history
-│  │  └─ admin/          뉴스 수집 실행, 작업 기록  → /admin
+│  │  └─ admin/          수집·선정 실행, 점수 순위, 작업 기록 → /admin
 │  ├─ login/             로그인                     → /login
 │  ├─ not-found.tsx      없는 주소로 들어왔을 때 화면
 │  ├─ layout.tsx         모든 화면의 공통 틀 (폰트 등)
@@ -50,7 +50,10 @@ src/
 ├─ components/           여러 화면에서 같이 쓰는 UI 조각
 ├─ jobs/
 │  ├─ sources.ts         뉴스를 가져올 언론사 RSS 목록
-│  └─ collect.ts         뉴스 수집 작업 (재시도, 중복 제거, 실행 기록)
+│  ├─ collect.ts         뉴스 수집 작업 (재시도, 중복 제거, 실행 기록)
+│  ├─ rank.ts            선정 알고리즘 (이슈 묶기, 점수 계산) — DB 없이 계산만
+│  ├─ keywords.ts        가산점/감점 키워드 사전 (써 보면서 조정)
+│  └─ select.ts          오늘의 뉴스 선정 작업 (자동/직접, 실행 기록)
 ├─ db/
 │  ├─ schema.ts          테이블 정의 (기사, 오늘의 뉴스, 내 글, 작업 기록)
 │  ├─ index.ts           DB 연결
