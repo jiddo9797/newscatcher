@@ -60,8 +60,11 @@ export async function runCollect(): Promise<CollectResult> {
   const okCount = sources.filter((s) => s.ok).length;
   const inserted = sources.reduce((sum, s) => sum + s.inserted, 0);
   const status = okCount === sources.length ? "success" : okCount > 0 ? "partial" : "failed";
-  const summary = `${sources.length}곳 중 ${okCount}곳 성공, 새 기사 ${inserted}개` +
-    (deletedCount ? `, 오래된 후보 ${deletedCount}개 정리` : "");
+  const failedNames = sources.filter((s) => !s.ok).map((s) => `${s.source} ${new URL(s.url).pathname} (${s.error})`);
+  const summary =
+    `${sources.length}곳 중 ${okCount}곳 성공, 새 기사 ${inserted}개` +
+    (deletedCount ? `, 오래된 후보 ${deletedCount}개 정리` : "") +
+    (failedNames.length ? ` · 실패: ${failedNames.join(", ")}` : "");
   const durationMs = Date.now() - startedAt.getTime();
 
   await db.insert(jobRuns).values({
