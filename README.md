@@ -2,6 +2,7 @@
 
 AI가 매일 골라준 뉴스 1개를 읽고, 직접 요약하고 의견을 쓰면, AI가 채점하고 첨삭해 주는 개인 뉴스 학습 웹 서비스.
 
+- 서비스: https://newscatcher-nine.vercel.app (개인용, 비밀번호 로그인)
 - 기획: [기획서.md](기획서.md)
 - 포트폴리오 정리: [포트폴리오_정리.md](포트폴리오_정리.md)
 
@@ -15,7 +16,7 @@ Next.js 16 · TypeScript · Tailwind CSS · PostgreSQL (PGlite / Neon) · Drizzl
 - [x] 4단계: 규칙 기반 뉴스 선정 (이슈 묶기 + 점수), 직접 선택
 - [x] 5단계: AI 채점 (Gemini 무료 등급, 원문 기반, 뒤에서 채점 + 자동 새로고침, 모델 자동 전환)
 - [x] 6단계 준비: 비밀번호 로그인(해시·잠금), Neon DB 전환, 매일 아침 자동 실행 주소
-- [ ] 6단계 배포: GitHub 업로드, Vercel 배포
+- [x] 6단계 배포: GitHub 업로드, Vercel 배포, Neon DB 연결, 매일 06:00 자동 실행
 
 ## 내 컴퓨터에서 실행하기
 ```bash
